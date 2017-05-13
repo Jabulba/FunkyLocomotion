@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.apache.commons.lang3.Validate;
 import com.rwtema.funkylocomotion.items.ItemBlockTeleporter;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.BlockStateContainer;
@@ -15,9 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockTeleport extends BlockPusher {
 	public BlockTeleport() {
@@ -32,7 +33,7 @@ public class BlockTeleport extends BlockPusher {
 	}
 
 	@Override
-	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
 		list.add(new ItemStack(itemIn, 1, 0));
 	}
 
@@ -47,7 +48,7 @@ public class BlockTeleport extends BlockPusher {
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
 		@SuppressWarnings("deprecation")
 		ItemStack item = super.getItem(worldIn, pos, state);
-		if (item.isEmpty() == false) {
+		if (item != null) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof TileTeleport) {
 				int teleportId = ((TileTeleport) tileEntity).teleportId;

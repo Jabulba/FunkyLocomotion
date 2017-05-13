@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion.items;
 
-import java.util.List;
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -10,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemBlockFrame extends ItemBlockMetadata {
 	public final int index;
@@ -60,6 +61,6 @@ public class ItemBlockFrame extends ItemBlockMetadata {
 			}
 		}
 
-		list.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(s, 60));
+		list.addAll(Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(s, 60));
 	}
 }

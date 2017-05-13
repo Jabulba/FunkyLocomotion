@@ -1,17 +1,12 @@
 package com.rwtema.funkylocomotion.rendering;
 
-import org.lwjgl.opengl.GL11;
 import com.rwtema.funkylocomotion.blocks.TileMovingClient;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -24,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import org.lwjgl.opengl.GL11;
 
 public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 	private BlockRendererDispatcher blockRenderer;
@@ -135,13 +131,13 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 		GlStateManager.pushMatrix();
 		setupTranslations(x, y, z, mover, h, dir, renderer);
 		try {
-			WorldClient prevWorld1 = Minecraft.getMinecraft().world;
-			World prevWorld2 = Minecraft.getMinecraft().player.world;
-			World prevWorld3 = rendererDispatcher.world;
+			WorldClient prevWorld1 = Minecraft.getMinecraft().theWorld;
+			World prevWorld2 = Minecraft.getMinecraft().thePlayer.worldObj;
+			World prevWorld3 = rendererDispatcher.worldObj;
 			try {
-				Minecraft.getMinecraft().world = fakeWorldClient;
-				Minecraft.getMinecraft().player.world = fakeWorldClient;
-				TileEntityRendererDispatcher.instance.world = fakeWorldClient;
+				Minecraft.getMinecraft().theWorld = fakeWorldClient;
+				Minecraft.getMinecraft().thePlayer.worldObj = fakeWorldClient;
+				TileEntityRendererDispatcher.instance.worldObj = fakeWorldClient;
 				renderer.setTranslation(0, 0, 0);
 				mover.tile.updateContainingBlockInfo();
 				RenderHelper.enableStandardItemLighting();
@@ -149,9 +145,9 @@ public class TESRMoving extends TileEntitySpecialRenderer<TileMovingClient> {
 				RenderHelper.disableStandardItemLighting();
 				renderer.setTranslation(0, 0, 0);
 			} finally {
-				Minecraft.getMinecraft().world = prevWorld1;
-				Minecraft.getMinecraft().player.world = prevWorld2;
-				TileEntityRendererDispatcher.instance.world = prevWorld3;
+				Minecraft.getMinecraft().theWorld = prevWorld1;
+				Minecraft.getMinecraft().thePlayer.worldObj = prevWorld2;
+				TileEntityRendererDispatcher.instance.worldObj = prevWorld3;
 			}
 		} catch (Exception e) {
 			FLRenderHelper.clearTessellator();

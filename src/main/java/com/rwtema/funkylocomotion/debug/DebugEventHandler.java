@@ -17,7 +17,7 @@ public class DebugEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void renderTiles(TickEvent.WorldTickEvent event) {
-		WorldClient clientWorld = Minecraft.getMinecraft().world;
+		WorldClient clientWorld = Minecraft.getMinecraft().theWorld;
 
 		if (event.world == null || clientWorld == null)
 			return;

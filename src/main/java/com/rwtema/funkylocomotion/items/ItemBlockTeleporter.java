@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.items;
 
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.rendering.WordDictionary;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -16,12 +13,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Random;
 
 public class ItemBlockTeleporter extends ItemBlock {
 
@@ -58,23 +58,22 @@ public class ItemBlockTeleporter extends ItemBlock {
 	}
 
 	@Override
-	public void getSubItems(@Nonnull Item item, @Nonnull CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubItems(@Nonnull Item item, @Nonnull CreativeTabs tab, @Nonnull List<ItemStack> list) {
 		list.add((new ItemStack(item, 1, 0)));
 	}
 
 	@Nonnull
 	@Override
-	public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-		ItemStack stack = playerIn.getHeldItem(hand);
+	public EnumActionResult onItemUse(ItemStack stack, @Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag == null || tag.getInteger(NBT_TELEPORTER_ID) == 0) {
 			if (worldIn.isRemote) {
-				playerIn.sendMessage(new TextComponentTranslation("frame.teleport.no_id.0"));
-				playerIn.sendMessage(new TextComponentTranslation("frame.teleport.no_id.1"));
+				playerIn.addChatComponentMessage(new TextComponentTranslation("frame.teleport.no_id.0"));
+				playerIn.addChatComponentMessage(new TextComponentTranslation("frame.teleport.no_id.1"));
 			}
 			return EnumActionResult.FAIL;
 		}
-		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 
 	@Override

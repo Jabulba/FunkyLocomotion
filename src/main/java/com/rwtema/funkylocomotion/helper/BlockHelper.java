@@ -1,8 +1,5 @@
 package com.rwtema.funkylocomotion.helper;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
-import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 import com.rwtema.funkylocomotion.api.FunkyCapabilities;
 import com.rwtema.funkylocomotion.api.IMoveCheck;
@@ -23,6 +20,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
 
 public class BlockHelper {
 	private static final MethodHandle methodHandle_Chunk_relightBlock =
@@ -67,7 +68,7 @@ public class BlockHelper {
 					return false;
 				}
 
-				extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.getWorld().provider.hasNoSky());
+				extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !chunk.getWorld().provider.getHasNoSky());
 			}
 
 			extendedblockstorage.set(dx, y & 15, dz, block.getStateFromMeta(meta));
@@ -139,13 +140,9 @@ public class BlockHelper {
 		markBlockForUpdate(world, pos);
 
 		if (!world.isRemote) {
-			// TODO: Is this correct in 1.11?
-			world.neighborChanged(pos, Blocks.AIR, pos);
-			world.neighborChanged(pos, newBlock, pos);
-			// It used to be this in 1.10:
-			//world.notifyBlockOfStateChange(pos, Blocks.AIR);
-			//world.notifyBlockOfStateChange(pos, newBlock);
-			world.notifyNeighborsOfStateChange(pos, newBlock, false);
+			world.notifyBlockOfStateChange(pos, Blocks.AIR);
+			world.notifyBlockOfStateChange(pos, newBlock);
+			world.notifyNeighborsOfStateChange(pos, newBlock);
 
 			if (newState.hasComparatorInputOverride()) {
 				world.updateComparatorOutputLevel(pos, newBlock);

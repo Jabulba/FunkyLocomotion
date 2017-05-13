@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion;
 
-import java.util.List;
-import java.util.WeakHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -10,6 +8,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.List;
+import java.util.WeakHashMap;
 
 public class EntityMovingEventHandler {
 	public static final WeakHashMap<Entity, Vec3d> client = new WeakHashMap<>();

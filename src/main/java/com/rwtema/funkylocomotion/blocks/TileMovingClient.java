@@ -1,9 +1,5 @@
 package com.rwtema.funkylocomotion.blocks;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.description.Describer;
 import com.rwtema.funkylocomotion.fakes.FakeWorldClient;
 import com.rwtema.funkylocomotion.rendering.ChunkRerenderer;
@@ -20,6 +16,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class TileMovingClient extends TileMovingBase {
 	public static final HashMap<BlockPos, WeakReference<TileEntity>> cachedTiles = new HashMap<>();
@@ -84,10 +85,10 @@ public class TileMovingClient extends TileMovingBase {
 //				tile = ref.get();
 		}
 
-		if (tile != null && FakeWorldClient.isValid(getWorld()) && tile.getWorld() == this.getWorld()) {
+		if (tile != null && FakeWorldClient.isValid(worldObj) && tile.getWorld() == this.worldObj) {
 			rawTile = true;
 			tile.setPos(pos.toImmutable());
-			tile.setWorld(FakeWorldClient.getFakeWorldWrapper(this.getWorld()));
+			tile.setWorldObj(FakeWorldClient.getFakeWorldWrapper(this.getWorld()));
 			tile.updateContainingBlockInfo();
 			this.tile = tile;
 			render = true;

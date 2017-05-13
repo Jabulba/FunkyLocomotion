@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion.items;
 
-import java.util.List;
-import javax.annotation.Nonnull;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.blocks.BlockStickyFrame;
 import com.rwtema.funkylocomotion.movers.IMover;
@@ -17,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
@@ -27,6 +24,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemWrench extends Item {
 	public static final int metaWrenchNormal = 0;
@@ -47,7 +47,7 @@ public class ItemWrench extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(@Nonnull Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubItems(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list) {
 		list.add(new ItemStack(item, 1, 0));
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
@@ -68,8 +68,7 @@ public class ItemWrench extends Item {
 
 	@Nonnull
 	@Override
-	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		if (stack.getItemDamage() != metaWrenchHammer)
 			return EnumActionResult.PASS;
 
@@ -96,7 +95,7 @@ public class ItemWrench extends Item {
 
 			for (BlockPos.MutableBlockPos otherPos : BlockPos.getAllInBoxMutable(pos.offset(d1, -2).offset(d2, -2), pos.offset(d1, 2).offset(d2, 2))) {
 				if (otherPos.equals(pos)) {
-					block.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+					block.onBlockActivated(world, pos, state, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
 				} else {
 					IBlockState otherBlockState = world.getBlockState(otherPos);
 					otherBlock = otherBlockState.getBlock();
@@ -105,7 +104,7 @@ public class ItemWrench extends Item {
 						if (isInaccessible(world, side, hitX, hitY, hitZ, blockingPos)) continue;
 
 
-						otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, side, hitX, hitY, hitZ);
+						otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
 					}
 				}
 			}
@@ -121,7 +120,7 @@ public class ItemWrench extends Item {
 				BlockPos blockingPos = otherPos.offset(side.getOpposite());
 				if (!pos.equals(otherPos) && isInaccessible(world, side, hitX, hitY, hitZ, blockingPos)) continue;
 
-				otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, side, hitX, hitY, hitZ);
+				otherBlock.onBlockActivated(world, otherPos, otherBlockState, player, hand, player.getHeldItem(hand), side, hitX, hitY, hitZ);
 			}
 
 		}
@@ -179,7 +178,7 @@ public class ItemWrench extends Item {
 	@SubscribeEvent
 	public void leftClick(PlayerInteractEvent.LeftClickBlock event) {
 		ItemStack heldItem = event.getEntityPlayer().getHeldItem(event.getHand());
-		if (heldItem.isEmpty() || heldItem.getItem() != this)
+		if (heldItem == null || heldItem.getItem() != this)
 			return;
 		if (!event.getWorld().isRemote) {
 			TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());

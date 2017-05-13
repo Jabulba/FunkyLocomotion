@@ -1,7 +1,5 @@
 package com.rwtema.funkylocomotion.particles;
 
-import java.lang.reflect.Field;
-import java.util.List;
 import com.rwtema.funkylocomotion.FunkyLocomotion;
 import com.rwtema.funkylocomotion.items.ItemWrench;
 import com.rwtema.funkylocomotion.network.FLNetwork;
@@ -19,12 +17,15 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 public class ObstructionHelper {
 	private static final Field field_PlayerChunkMapEntry_players = ReflectionHelper.findField(PlayerChunkMapEntry.class, "field_187283_c", "players");
 
 	@SideOnly(Side.CLIENT)
 	public static boolean shouldRenderParticles() {
-		return playerHoldingWrench(Minecraft.getMinecraft().player);
+		return playerHoldingWrench(Minecraft.getMinecraft().thePlayer);
 	}
 
 	private static boolean playerHoldingWrench(EntityPlayer thePlayer) {
@@ -32,7 +33,7 @@ public class ObstructionHelper {
 	}
 
 	private static boolean isEyeWrench(ItemStack heldItem) {
-		return heldItem.isEmpty() == false &&
+		return heldItem != null &&
 				heldItem.getItem() == FunkyLocomotion.wrench && heldItem.getItemDamage() == ItemWrench.metaWrenchEye;
 	}
 
